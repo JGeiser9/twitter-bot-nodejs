@@ -1,0 +1,25 @@
+{
+  "name": "twitter-bot-nodejs",
+  "version": "1.0.0",
+  "description": "a simple twitter bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "Jake Geiser <JGeiser9>",
+  "license": "MIT",
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "node-cron": "^2.0.3",
+    "twit": "^2.2.11"
+  }
+}
