@@ -1,7 +1,7 @@
 require('dotenv').config();
+var Twit = require('twit');
 var axios = require('axios');
 var cron = require('node-cron');
-var Twit = require('twit');
 var moment = require('moment-timezone');
 
 // Twitter credentials
@@ -15,6 +15,9 @@ const T = new Twit({
 // Send the posts to twitter
 function post_initial_status(incidents, current_date) {
   const date = moment.unix(current_date).format("MM-DD-YYYY");
+  const yesterdays_date = moment().subtract(1, "days").format("MM-DD-YYYY");
+
+  console.log(`Total Incidents from ${yesterdays_date}: ${incidents.length}`);
 
   // Check for theft reports
   if (incidents.length) {
@@ -25,11 +28,13 @@ function post_initial_status(incidents, current_date) {
       T.post('statuses/update', { status: status }, (err) => {
         if (err) {
           console.log(err);
+        } else {
+          console.log(`Tweet Sent | ${date}`)
         }
       });
     });
   } else {
-    console.log(`No reports in the past 24 hours | ${date}`);
+    console.log(`No tweets sent | ${date}`);
   }
 }
 
@@ -43,11 +48,14 @@ async function get_data(url, current_date) {
   }
 }
 
-// Run theft report at 12 every day for previous 24 hours
-cron.schedule('* 12 * * *', () => {
+// Report should run every day @ 12PM CT
+cron.schedule('0 12 * * 0-6', () => {
   const yesterday_unix = moment().tz("America/Chicago").subtract(1, "days").unix();
   const today_unix = moment().tz("America/Chicago").subtract(1, "minute").unix();
   const url = `https://bikewise.org:443/api/v2/incidents?page=1&occurred_before=${today_unix}&occurred_after=${yesterday_unix}&incident_type=theft&proximity=Minneapolis&proximity_square=100`;
+
+  // Create a log for the docker container every time the report is executed
+  console.log(`----- Fetching Data @ ${moment().format("MM-DD-YYYY hh:mm A")} -----`)
 
   get_data(url, today_unix);
 });
