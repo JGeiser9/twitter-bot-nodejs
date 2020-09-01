@@ -18,6 +18,12 @@ https://twitter.com/mpls_cycling
  - Cron
  - Moment
 
+# Credentials
+
+This bot assumes you have a developer account with Twitter. If not, you will have to sign up and register your bot to get the necessary credentials to tweet on behalf of your account.
+
+Rename ```.env-sample``` to ```.env``` and paste in the credentials found in the Twitter developer dashboard.
+
 # Getting Started
 
 ### Clone
